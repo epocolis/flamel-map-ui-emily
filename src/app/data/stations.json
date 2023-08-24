@@ -1,0 +1,103 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "station_id": "3030525",
+        "station_name": "BARNWELL AGDM"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.3,
+          49.8
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "station_id": "3030768",
+        "station_name": "BOW ISLAND"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.4503,
+          49.7344
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "station_id": "3032927",
+        "station_name": "GRASSY LAKE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.732778,
+          49.873611
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "station_id": "3032550",
+        "station_name": "FINCASTLE AGDM"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.033333,
+          49.8
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "station_id": "3032642",
+        "station_name": "FOREMOST AGDM"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.486111,
+          49.483334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "station_id": "3035845",
+        "station_name": "SEVEN PERSONS AGDM"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -110.916667,
+          49.916667
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "station_id": "3037675",
+        "station_name": "WRENTHAM AGDM"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.116667,
+          49.5
+        ]
+      }
+    }
+  ]
+}

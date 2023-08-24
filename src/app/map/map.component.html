@@ -1,0 +1,87 @@
+<div class="map" id="map"></div>
+
+<form [formGroup]="fieldForm">
+
+    <div class="position-relative">
+        <div class="horizontal-bar">
+            <input type="text" formControlName="coordinateInput">
+
+            <select formControlName="selectField" (change)="onSelectField()">
+                <option value="" disabled selected>Select the field</option>
+                <option *ngFor="let field of farmFields" [value]="field.field_id">
+                    {{ getOwnership(field.field_id) }}
+                </option>
+                <option value="allFields">All Fields</option>
+            </select>
+
+            <input type="date" formControlName="date" min="2023-01-01" max="2023-08-24" (change)="onSelectDate()"/>
+
+            <input type="text" formControlName="cropType">
+            <input type="text" formControlName="crop">
+        </div>
+
+        <div class="position-right">
+            <div class="buttons">
+                <button [ngClass]="showWeatherStations ? 'btn active' : 'btn'" (click)="onToggleWeatherStations()"><i class="fa-solid fa-layer-group"></i>
+                </button>
+                <button class="btn"><i class="fa-solid fa-cloud-sun"></i>
+                </button>
+                <button [ngClass]="showSoilMoisture ? 'btn active' : 'btn'" (click)="onToggleSoilMoisture()"><i class="fa-solid fa-fill-drip"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+  
+</form>
+
+<div class="mapboxgl-ctrl-top-left margin-top-lg">
+    <div *ngIf="selectedField && !showSoilMoisture" class="position-relative">
+        <div class="map-overlay">
+            <p><b>Field Information</b></p>
+            <p>Farm: {{selectedField.field_id}}</p>
+            <ng-container *ngFor="let item of selectedField | keyvalue">
+                <ng-container *ngIf="item.key !== 'field_id'">
+                    <p>{{ item.key }}: {{ item.value }}</p>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+
+    <div *ngIf="selectedField && selectedDate && !showSoilMoisture" class="position-relative">
+        <div class="map-overlay">
+            <p><b>Irrigation Recommendation</b></p>
+            <p>Farm: {{selectedField.field_id}}</p>
+            <ng-container *ngFor="let item of irricationRec | keyvalue">
+                <ng-container *ngIf="item.key !== 'field'">
+                    <p>{{ item.key }}: {{ item.value }}</p>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+
+    <div *ngIf="showSoilMoisture" class="position-relative">
+        <div class="map-overlay">
+            <p><b>Field Capacity by Soil Type</b></p>
+            <p>The maximum soil moisture different types of soil can hold</p>
+            <div class="capacity-container">
+                <div class="column">
+                    <p>{{ capacity.clay }}%</p>
+                    <p>{{ capacity.silt }}%</p>
+                    <p>{{ capacity.loam }}%</p>
+                    <p>{{ capacity.sand }}%</p>
+                </div>
+                <div class="column">
+                    <p>Clay (C)</p>
+                    <p>Silt (Si)</p>
+                    <p>Loam (L)</p>
+                    <p>Sand (S)</p>
+                </div>
+            </div>
+        </div>
+        <!-- Soil Moisture Info Graphic -->
+        <div class="soil-overlay">
+            <input class="capacity-width" type="text" value="36%">
+            <div><img src="https://rbcgithub.fg.rbc.com/storage/user/19085/files/2ce1b5ab-ceaf-4628-a5be-d9229c58c1ca" alt="soil capacity" height="300px"></div>
+        </div>
+    </div>
+</div>
