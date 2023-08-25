@@ -14,7 +14,7 @@
                 <option value="allFields">All Fields</option>
             </select>
 
-            <input type="date" formControlName="date" min="2023-01-01" max="2023-08-24" (change)="onSelectDate()"/>
+            <input id="recDate" type="date" formControlName="date" min="2023-01-01" max="2023-08-24" (change)="onSelectDate()"/>
 
             <input type="text" formControlName="cropType">
             <input type="text" formControlName="crop">
@@ -22,11 +22,11 @@
 
         <div class="position-right">
             <div class="buttons">
-                <button [ngClass]="showWeatherStations ? 'btn active' : 'btn'" (click)="onToggleWeatherStations()"><i class="fa-solid fa-layer-group"></i>
+                <button title="Show Map Layers - Weather Stations and Fields" [ngClass]="showWeatherStations ? 'btn active' : 'btn'" (click)="onToggleWeatherStations()"><i class="fa-solid fa-layer-group"></i>
                 </button>
-                <button class="btn"><i class="fa-solid fa-cloud-sun"></i>
+                <button title="Weather Info" class="btn"><i class="fa-solid fa-cloud-sun"></i>
                 </button>
-                <button [ngClass]="showSoilMoisture ? 'btn active' : 'btn'" (click)="onToggleSoilMoisture()"><i class="fa-solid fa-fill-drip"></i>
+                <button title="Irrigation Recommendation" [ngClass]="showSoilMoisture ? 'btn active' : 'btn'" (click)="onToggleSoilMoisture()"><i class="fa-solid fa-fill-drip"></i>
                 </button>
             </div>
         </div>
@@ -37,8 +37,8 @@
 <div class="mapboxgl-ctrl-top-left margin-top-lg">
     <div *ngIf="selectedField && !showSoilMoisture" class="position-relative">
         <div class="map-overlay">
-            <p><b>Field Information</b></p>
-            <p>Farm: {{selectedField.field_id}}</p>
+            <p><b>Owner: {{ getOwnership(selectedField.field_id) }}</b></p>
+            <p>Farm: {{ selectedField.field_id }}</p>
             <ng-container *ngFor="let item of selectedField | keyvalue">
                 <ng-container *ngIf="item.key !== 'field_id'">
                     <p>{{ item.key }}: {{ item.value }}</p>

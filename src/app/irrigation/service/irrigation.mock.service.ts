@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
-import { CapacityPoint, FarmField, IrrigationRecommendation, Soils } from "./../irrigation.model";
-import { defaultField1, defaultFields, defaultIrrigation, defaultSoils } from "../../data/mocks";
+import { CapacityPoint, FarmField, IrrigationRecommendation, Soils } from "../irrigation.model";
+import { fields, irrigationRecommendations, soils } from "../../data/mocks";
 
 @Injectable({
     providedIn: 'root'
@@ -9,22 +9,22 @@ import { defaultField1, defaultFields, defaultIrrigation, defaultSoils } from ".
 export class MockIrrigationService {
 
     postIrrigationCapacity(soil_type: string): Observable<CapacityPoint> {
-        return of({ capacity_point: defaultField1.capacity_point });
+        return of({ capacity_point: soils.capacity_points.Clay_Loam });
     }
     
     postIrrigationRecommendation(field_id: string, date: string): Observable<IrrigationRecommendation> {
-        return of(defaultIrrigation)
+        return of(irrigationRecommendations[0])
     };
 
     getIrrigationFields(): Observable<FarmField[]> {
-        return of(defaultFields);
+        return of(fields);
     };
 
     getIrrigationField(fieldId: string): Observable<FarmField> {
-        return of(defaultField1)
+        return of(fields[0])
     };
 
     getIrrigationSoils(): Observable<Soils> {
-        return of(defaultSoils);
+        return of(soils);
     };
 }

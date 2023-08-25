@@ -1,7 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as IrrigationActions from './irrigation.actions';
 import { FarmField } from '../irrigation.model';
-import { defaultFields } from 'src/app/data/mocks';
+import { fields } from '../../data/mocks';
 
 export const IRRIGATION_FEATURE_KEY = 'irrigation';
 
@@ -10,7 +10,7 @@ export interface IrrigationState {
 };
 
 export const initialState: IrrigationState = {
-  fields: defaultFields
+  fields: fields
 };
 
 export const irrigationReducer = createReducer(

@@ -7,7 +7,7 @@ import * as weather_stations from '../data/stations.json';
 import { FarmField, IrrigationRecommendation } from '../irrigation/irrigation.model';
 import { FormBuilder } from '@angular/forms';
 import { MockIrrigationService } from '../irrigation/service/irrigation.mock.service';
-import { defaultIrrigation, defaultOnwerships } from '../data/mocks';
+import { irrigationRecommendations, onwerships } from '../data/mocks';
 
 @Component({
   selector: 'app-map',
@@ -140,10 +140,20 @@ export class MapComponent implements OnInit {
     } else if (selectedFieldValue) {
       this.setLayerValues(selectedFieldValue)
     }
+
+    const isIrrigationRecValid = irrigationRecommendations.find(rec =>
+      !!(rec.field.replace(/[^0-9]/g, '') === this.selectedField?.field_id &&
+      rec.date === this.selectedDate)
+    );
+
+    if (!isIrrigationRecValid) {
+      this.selectedDate = '';
+      (document.getElementById('recDate') as any).value = '';
+    }
   }
 
   getOwnership(fieldId: string): string {
-    const ownership = defaultOnwerships.find(ownership => ownership.field_id === fieldId);
+    const ownership = onwerships.find(ownership => ownership.field_id === fieldId);
     return ownership?.owned_by || '';
   }
 
@@ -194,12 +204,20 @@ export class MapComponent implements OnInit {
   onSelectDate(): void {
     if (!this.fieldForm.get('selectField')?.value) {
       alert('Please selet a field');
-    }
+    };
 
     this.selectedDate = this.fieldForm.get('date')?.value as string;
 
-    // const irricationRec$ = this.mockService.postIrrigationRecommendation(this.selectedField?.field_id || '', this.fieldForm.get('date')?.value || '');
-    this.irricationRec = defaultIrrigation;
+    this.irricationRec = irrigationRecommendations.find(rec =>
+        rec.field.replace(/[^0-9]/g, '') === this.selectedField?.field_id &&
+        rec.date === this.selectedDate
+    );
+
+    if (!this.irricationRec) {
+      alert('Please choose another date for the irrigation recommendation of this field');
+      this.selectedDate = '';
+      (document.getElementById('recDate') as any).value = '';
+    }
   }
 
   onToggleSoilMoisture(): void {
