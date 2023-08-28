@@ -1,7 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import * as IrrigationActions from './irrigation.actions';
 import { FarmField } from '../irrigation.model';
-import { fields } from '../../data/mocks';
+import { fields } from '../../mocks/data';
 
 export const IRRIGATION_FEATURE_KEY = 'irrigation';
 

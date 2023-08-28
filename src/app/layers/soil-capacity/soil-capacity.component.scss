@@ -1,0 +1,20 @@
+.soil-overlay {
+    padding: 10px;
+    margin: 10px;
+    float: left;
+    max-width: 300px;
+}
+
+.capacity-width {
+    width: 30px;
+}
+
+.container {
+    padding: 10px 10px 0 10px;
+
+    &:last-child {
+        padding-bottom: 25px;
+    }
+
+    margin: 0 20px 0 20px;
+}

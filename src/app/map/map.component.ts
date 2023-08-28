@@ -2,12 +2,13 @@ import { environment } from '../../environments/environment';
 import { Component, Input, OnInit } from '@angular/core';
 import { FeatureCollection, Polygon } from 'geojson';
 import * as mapboxgl from 'mapbox-gl';
-import * as farm_polygons from '../data/farm_polygons.json';
-import * as weather_stations from '../data/stations.json';
-import { FarmField, IrrigationRecommendation } from '../irrigation/irrigation.model';
+import * as farm_polygons from '../mocks/farm_polygons.json';
+import * as weather_stations from '../mocks/stations.json';
+import { FarmField, IrrigationRecommendation } from '../data-access/irrigation.model';
 import { FormBuilder } from '@angular/forms';
-import { MockIrrigationService } from '../irrigation/service/irrigation.mock.service';
-import { irrigationRecommendations, onwerships } from '../data/mocks';
+import { MockIrrigationService } from '../data-access/service/irrigation.mock.service';
+import { irrigationRecommendations, onwerships, soilCapacity } from '../mocks/data';
+import { getFieldOwnership } from '../shared/format-field-data.util';
 
 @Component({
   selector: 'app-map',
@@ -18,7 +19,14 @@ import { irrigationRecommendations, onwerships } from '../data/mocks';
 export class MapComponent implements OnInit {
   @Input() farmFields?: FarmField[] | null;
   selectedField?: FarmField;
-  selectedDate?: string;
+  /**
+   * This should be a dynamic value, but for now we'll just default to today
+   */
+  dateToday = new Date().toDateString();
+  /**
+   * Use date format for html select
+   */
+  selectedDate = new Date().toISOString().slice(0, 10);
   irricationRec?: IrrigationRecommendation;
 
   map: mapboxgl.Map | undefined;
@@ -29,21 +37,19 @@ export class MapComponent implements OnInit {
   layerIdAllFields = 'fields';
   layerIdWeatherStations = 'weatherStations';
   popup?: mapboxgl.Popup;
-  showWeatherStations = false;
-  showSoilMoisture = false;
-  capacity = {
-    clay: 36,
-    silt: 32,
-    loam: 26,
-    sand: 12,
-  }
+  showFeatureLayers = false;
+  showSoilCapacity = false;
+  capacity = soilCapacity;
+
+  placeholderCrop = 'Crop';
+  placeholderCropType = 'Crop Type'
 
   fieldForm = this.formBuilder.group({
     selectField: '',
-    date: '',
+    date: this.selectedDate,
     coordinateInput: '',
-    cropType: 'Crop Type',
-    crop: 'Crop',
+    cropType: this.placeholderCrop,
+    crop: this.placeholderCropType,
     capacityPoint: '36%'
   });
 
@@ -126,50 +132,18 @@ export class MapComponent implements OnInit {
     return this.farmFields?.find((field: FarmField) => field.field_id === clickedFieldId)
   }
 
-  onSelectField(): void {
-    this.selectedField = undefined;
-    this.popup?.remove();
-    const selectedFieldValue = this.fieldForm.get('selectField')?.value;
-
-    if (selectedFieldValue === 'allFields') {
-      this.map?.setFilter(this.layerIdAllFields, null);
-      this.map?.setLayoutProperty(this.layerIdAllFields, 'visibility', 'visible');
-      this.map?.fitBounds(new mapboxgl.LngLatBounds(this.albertaLngLat, this.albertaLngLat), {
-        maxZoom: 10.5
-      })
-    } else if (selectedFieldValue) {
-      this.setLayerValues(selectedFieldValue)
-    }
-
-    const isIrrigationRecValid = irrigationRecommendations.find(rec =>
-      !!(rec.field.replace(/[^0-9]/g, '') === this.selectedField?.field_id &&
-      rec.date === this.selectedDate)
-    );
-
-    if (!isIrrigationRecValid) {
-      this.selectedDate = '';
-      (document.getElementById('recDate') as any).value = '';
-    }
-  }
-
   getOwnership(fieldId: string): string {
-    const ownership = onwerships.find(ownership => ownership.field_id === fieldId);
-    return ownership?.owned_by || '';
-  }
-
-  setLayerValues(id: string) {
-    this.selectedField = this.getMatchingField(id);
-    this.fieldForm.get('cropType')?.setValue(this.selectedField?.crop_type as string);
-    this.fieldForm.get('crop')?.setValue(this.selectedField?.crop_name as string);
-    this.map?.setFilter(this.layerIdAllFields, ['==', ['get', 'farm_id'], id]);
-    this.map?.setLayoutProperty(this.layerIdAllFields, 'visibility', 'visible');
-    this.zoomToPolygonFeature(id);
+    return getFieldOwnership(fieldId, onwerships);
   }
 
   setCoordinateInput(): void {
     if (!this.fieldForm.get('coordinateInput')?.value) {
       this.fieldForm.get('coordinateInput')?.setValue(this.formatCoordinates())
     }
+  }
+
+  formatCoordinates(): string {
+    return `${this.map?.getCenter().lng.toFixed(4)}, ${this.map?.getCenter().lat.toFixed(4)}`;
   }
 
   zoomToPolygonFeature(fieldId: string) {
@@ -185,20 +159,31 @@ export class MapComponent implements OnInit {
     }
   }
 
-  formatCoordinates(): string {
-    return `${this.map?.getCenter().lng.toFixed(4)}, ${this.map?.getCenter().lat.toFixed(4)}`;
+  onSelectField(): void {
+    this.selectedField = undefined;
+    this.popup?.remove();
+    const selectedFieldValue = this.fieldForm.get('selectField')?.value;
+
+    if (selectedFieldValue === 'allFields') {
+      this.map?.setFilter(this.layerIdAllFields, null);
+      this.map?.setLayoutProperty(this.layerIdAllFields, 'visibility', 'visible');
+      this.map?.fitBounds(new mapboxgl.LngLatBounds(this.albertaLngLat, this.albertaLngLat), {
+        maxZoom: 10.5
+      });
+      this.fieldForm.get('cropType')?.setValue(this.placeholderCropType);
+      this.fieldForm.get('crop')?.setValue(this.placeholderCrop);
+    } else if (selectedFieldValue) {
+      this.setLayerValues(selectedFieldValue)
+    }
   }
 
-  onToggleWeatherStations(): void {
-    this.showWeatherStations = !this.showWeatherStations
-
-    this.showWeatherStations ?
-      this.map?.setLayoutProperty(this.layerIdWeatherStations, 'visibility', 'visible') :
-      this.map?.setLayoutProperty(this.layerIdWeatherStations, 'visibility', 'none');
-
-    this.showWeatherStations ?
-      this.map?.setLayoutProperty(this.layerIdAllFields, 'visibility', 'visible') :
-      this.map?.setLayoutProperty(this.layerIdAllFields, 'visibility', 'none');
+  setLayerValues(id: string) {
+    this.selectedField = this.getMatchingField(id);
+    this.fieldForm.get('cropType')?.setValue(this.selectedField?.crop_type as string);
+    this.fieldForm.get('crop')?.setValue(this.selectedField?.crop_name as string);
+    this.map?.setFilter(this.layerIdAllFields, ['==', ['get', 'farm_id'], id]);
+    this.map?.setLayoutProperty(this.layerIdAllFields, 'visibility', 'visible');
+    this.zoomToPolygonFeature(id);
   }
 
   onSelectDate(): void {
@@ -209,8 +194,8 @@ export class MapComponent implements OnInit {
     this.selectedDate = this.fieldForm.get('date')?.value as string;
 
     this.irricationRec = irrigationRecommendations.find(rec =>
-        rec.field.replace(/[^0-9]/g, '') === this.selectedField?.field_id &&
-        rec.date === this.selectedDate
+      rec.field.replace(/[^0-9]/g, '') === this.selectedField?.field_id &&
+      rec.date === this.selectedDate
     );
 
     if (!this.irricationRec) {
@@ -220,14 +205,26 @@ export class MapComponent implements OnInit {
     }
   }
 
-  onToggleSoilMoisture(): void {
+  onToggleFeatureLayers(e: Event): void {
+    this.showFeatureLayers = !this.showFeatureLayers
+
+    this.showFeatureLayers ?
+      this.map?.setLayoutProperty(this.layerIdWeatherStations, 'visibility', 'visible') :
+      this.map?.setLayoutProperty(this.layerIdWeatherStations, 'visibility', 'none');
+
+    this.showFeatureLayers ?
+      this.map?.setLayoutProperty(this.layerIdAllFields, 'visibility', 'visible') :
+      this.map?.setLayoutProperty(this.layerIdAllFields, 'visibility', 'none');
+  }
+
+  onToggleSoilCapacityLayer(e: Event): void {
     const fieldValue = this.fieldForm.get('selectField')?.value;
     const dateValue = this.fieldForm.get('date')?.value;
 
     if ((!fieldValue && !dateValue) || !fieldValue || !dateValue) {
       alert('Please selet a valid field and date to view the soil moisture data');
     } else {
-      this.showSoilMoisture = !this.showSoilMoisture;
+      this.showSoilCapacity = !this.showSoilCapacity;
     }
   }
 }

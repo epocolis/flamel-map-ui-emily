@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 import { Observable } from "rxjs";
-import { CapacityPoint, IrrigationRecommendation, FarmField, Soils } from "../irrigation.model";
+import { IrrigationRecommendation, FarmField, CapacityPoint, Soils } from "../irrigation.model";
 
 @Injectable({
     providedIn: 'root'

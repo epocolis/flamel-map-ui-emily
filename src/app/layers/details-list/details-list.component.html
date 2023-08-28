@@ -1,0 +1,13 @@
+<div class="container">
+    <p *ngIf="heading" class="heading">{{ heading }}</p>
+    <ng-container *ngFor="let item of items">
+        <div class="capacity-container">
+            <div class="column">
+                <p>{{ item.title }}</p>
+            </div>
+            <div class="column">
+                <p class="value bold">{{ item.value }}</p>
+            </div>
+        </div>
+    </ng-container>
+</div>

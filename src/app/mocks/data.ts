@@ -1,11 +1,11 @@
-import { FarmField, IrrigationRecommendation, Onwership, Soils } from "../irrigation/irrigation.model";
+import { FarmField, IrrigationRecommendation, Onwership, Soils } from "../data-access/irrigation.model";
 
 export const fields: FarmField[] = [
     {
         field_id: '1',
-        soil_type: "flm:Loam",
-        crop_type: 'Legumes',
-        crop_name: 'Lentils',
+        soil_type: "Loam",
+        crop_type: 'Oilseed crops',
+        crop_name: 'Mustard',
         capacity_point: 28,
         field_soil_moisture: 15.98,
         status: 'success'
@@ -13,8 +13,8 @@ export const fields: FarmField[] = [
     {
         field_id: '4',
         soil_type: "flm:Clay_Loam",
-        crop_type: 'Legumes',
-        crop_name: 'Lentils',
+        crop_type: 'Cereals',
+        crop_name: 'Spring Wheat',
         capacity_point: 36,
         field_soil_moisture: 22.40,
         status: 'success'
@@ -22,8 +22,8 @@ export const fields: FarmField[] = [
     {
         field_id: '8',
         soil_type: "flm:Silt_Loam",
-        crop_type: 'Legumes',
-        crop_name: 'Lentils',
+        crop_type: 'Oilseed crops',
+        crop_name: 'Canola',
         capacity_point: 31,
         field_soil_moisture: 31.31,
         status: 'success'
@@ -31,8 +31,8 @@ export const fields: FarmField[] = [
     {
         field_id: '20',
         soil_type: "flm:Clay_Loam",
-        crop_type: 'Legumes',
-        crop_name: 'Lentils',
+        crop_type: 'Root/tuber crops with high starch or inulin content',
+        crop_name: 'Potatoes',
         capacity_point: 28,
         field_soil_moisture: 16.01,
         status: 'success'
@@ -141,3 +141,10 @@ export const onwerships: Onwership[] = [
         owned_by: 'Christy Champagne'
     }
 ]
+
+export const soilCapacity = {
+    clay: 36,
+    silt: 32,
+    loam: 26,
+    sand: 12,
+  }

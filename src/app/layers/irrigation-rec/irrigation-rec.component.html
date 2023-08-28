@@ -1,0 +1,8 @@
+<details-list [items]="fieldMetrics" heading="Field Metrics"></details-list>
+
+<div class="container">
+    <p class="heading">Recommendations</p>
+    <p class="bold">{{ getFieldRecommendation()?.recommendation }}</p>
+    <p>Rationale</p>
+    <p class="bold">{{ getFieldRecommendation()?.rationale }}</p>
+</div>

@@ -1,10 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
-import { FarmField } from "../../irrigation/irrigation.model";
-import { IrrigationState } from "../../irrigation/store/irrigation.reducer";
-import { irrigationFieldsSelector } from "../../irrigation/store/irrigation.selectors";
-import { getIrrigationFields } from "../../irrigation/store/irrigation.actions";
+import { FarmField } from "../../data-access/irrigation.model";
+import { getIrrigationFields } from "../../data-access/store/irrigation.actions";
+import { IrrigationState } from "../../data-access/store/irrigation.reducer";
+import { irrigationFieldsSelector } from "../../data-access/store/irrigation.selectors";
+
 
 @Component({
     selector: 'map-container',

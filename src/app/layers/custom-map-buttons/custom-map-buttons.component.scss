@@ -1,0 +1,19 @@
+.position-top-right {
+    float: right;
+    margin-right: 10px;
+    margin-top: 75px;
+}
+
+.custom-ctrl {
+    height: 29px;
+    width: 29px;
+    &-top {
+        border-radius: 4px 4px 0 0;
+    }
+    &-middle {
+        border-radius: 0;
+    }
+    &-bottom {
+        border-radius: 0 0 4px 4px;
+    }
+}

@@ -40,3 +40,15 @@ export interface Onwership {
     field_id: string,
     owned_by: string,
 }
+
+export interface SoilCapacity {
+    clay: number,
+    silt: number,
+    loam: number,
+    sand: number,
+}
+
+export interface DetailItem {
+    title: string,
+    value: string
+}

@@ -1,0 +1,31 @@
+.container {
+    padding: 10px 10px 0 10px;
+
+    &:last-child {
+        padding-bottom: 25px;
+    }
+
+    margin: 0 20px 0 20px;
+}
+
+.capacity-container {
+    display: flex;
+}
+
+.column {
+    float: left;
+    flex: 1;
+}
+
+.value {
+    text-align: right;
+}
+
+.bold {
+    font-weight: 300;
+}
+
+.heading {
+    font-size: 25px;
+    margin-bottom: 15px;
+}

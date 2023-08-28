@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { CapacityPoint, FarmField, IrrigationRecommendation, Soils } from "../irrigation.model";
-import { fields, irrigationRecommendations, soils } from "../../data/mocks";
+import { fields, irrigationRecommendations, soils } from "../../mocks/data";
 
 @Injectable({
     providedIn: 'root'

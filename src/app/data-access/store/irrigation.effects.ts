@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import * as IrrigationActions from "../store/irrigation.actions";
+import * as IrrigationActions from "./irrigation.actions";
 import { IrrigationService } from "../service/irrigation.service";
 import { catchError, map, of, switchMap } from "rxjs";
 import { FarmField } from "../irrigation.model";
